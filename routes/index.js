@@ -6,9 +6,12 @@ const knex = require("knex")
 
 /* GET home page. */
 router.get("/", function(req, res, next){
-  knex("movie").select("*").then(data => {
-    console.log(data)
-  })
+  db("movie")
+    .join("person", "person.id", "=", "movie.director_id")
+    .select("movie.id", "movie.title", {director: "person.name"})
+    .then(data => {
+      return res.json(data)
+    })
 })
 
 module.exports = router
